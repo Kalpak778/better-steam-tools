@@ -34,8 +34,7 @@ try {
         $files[$name] = $matches[0].FullName
     }
     Write-Host "Steam folder: $steam"
-    $answer = Read-Host 'Back up and replace these 3 DLL files in Steam root? (yes/no)'
-    if ($answer -ne 'yes') { Write-Host 'Cancelled.'; return }
+    Write-Host 'Backing up and updating the 3 DLL files...'
     $backup = Join-Path $steam ('bst-backup-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
     New-Item -ItemType Directory -Path $backup -Force | Out-Null
     foreach ($name in $required) {
@@ -47,7 +46,7 @@ try {
     Write-Host "Installed v1.0.9 in $steam" -ForegroundColor Green
     Write-Host "Backup (previous DLLs, if any): $backup"
 } catch {
-    Write-Error "Installation failed: $($_.Exception.Message)"
+    throw "Installation failed: $($_.Exception.Message)"
 } finally {
     if (Test-Path -LiteralPath $tempDir) { Remove-Item -LiteralPath $tempDir -Recurse -Force -ErrorAction SilentlyContinue }
 }
